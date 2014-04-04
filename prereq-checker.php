@@ -62,6 +62,13 @@ class MyOwnChecker extends PrereqCheck {
 $pc->registerCheck('own_checker','MyOwnChecker');
 $pc->check('own_checker',true);
 */
+
+if ($pc->didAllSucceed()) {
+    echo "All tests succeeded!\n";
+} else {
+    echo "Some tests failed. Please check.\n";
+}
+
 if ($pc->getMode() == 'web') {
     echo '</pre>';
 }

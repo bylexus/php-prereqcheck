@@ -82,6 +82,13 @@ class PrereqChecker {
         $this->_checkResults = array();
     }
 
+    public function didAllSucceed() {
+        foreach($this->_checkResults as $result) {
+            if ($result->success() !== true) return false;
+        }
+        return true;
+    }
+
     private function outputCheckResult(CheckResult $res) {
         $this->writeOutput($res);
     }
