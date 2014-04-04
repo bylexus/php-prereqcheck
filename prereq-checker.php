@@ -23,6 +23,8 @@ $pc->check('php_extension','xml');
 $pc->check('php_extension','soap');
 $pc->check('php_extension','openssl');
 
+$pc->check('php_ini','display_errors',E_NOTICE,'string', CheckResult::RES_WARNING);
+
 /*
 $pc->check('php_ini','display_errors', function($value) {
     if ($value == true) throw new WarningException('Errors should not be displayed to the frontend.');

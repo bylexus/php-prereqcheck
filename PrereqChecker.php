@@ -1,4 +1,10 @@
 <?php
+require_once(dirname(__FILE__).'/lib/CheckResult.php');
+require_once(dirname(__FILE__).'/lib/PrereqCheck.php');
+require_once(dirname(__FILE__).'/lib/PhpVersionPrereqCheck.php');
+require_once(dirname(__FILE__).'/lib/PhpExtensionPrereqCheck.php');
+require_once(dirname(__FILE__).'/lib/PhpIniPrereqCheck.php');
+
 /**
  * A Prerequisites checker for PHP. It enables the user to easily check for
  * application pre-requisites, whatever that may be. This checker comes with some pre-defined
@@ -123,107 +129,5 @@ class PrereqChecker {
             $str .= "<span style=\"color: #FFFF00\">WARNING: </span>{$res->message}";
         }
         echo "{$str}</div>";
-    }
-}
-
-class CheckResult {
-    const RES_PASSED = 'passed';
-    const RES_WARNING = 'warning';
-    const RES_FAILED  = 'failed';
-
-    public $check = null;
-    public $message = '';
-
-    private $_result = self::RES_PASSED;
-
-    public function __construct($result = CheckResult::RES_PASSED, PrereqCheck $check = null) {
-        $this->_result = $result;
-        $this->check = $check;
-    }
-
-    private function checkAllowedResult($res) {
-        return in_array($res, array(self::RES_PASSED,self::RES_WARNING,self::RES_FAILED));
-    }
-
-    public function setResult($res, $msg = '') {
-        if ($this->checkAllowedResult($res)) {
-            $this->_result = $res;
-            $this->message = $msg;
-        }
-    }
-
-    public function passed() {
-        return $this->_result === self::RES_PASSED;
-    }
-
-    public function warning() {
-        return $this->_result === self::RES_WARNING;
-    }
-
-    public function failed() {
-        return $this->_result === self::RES_FAILED;
-    }
-
-    public function success() {
-        return $this->passed() || $this->warning();
-    }
-}
-
-
-abstract class PrereqCheck {
-    public $name = "Insert check name here";
-    abstract public function check();
-}
-
-class PhpVersionPrereqCheck extends PrereqCheck {
-    public $_name = 'PHP Version Check';
-
-    public function check() {
-        $arg_list = func_get_args();
-        $operator = $arg_list[0];
-        $requiredVersion = $arg_list[1];
-        $actualVersion = phpversion();
-        $this->name = $this->_name . "({$operator} {$requiredVersion})";
-
-        $res = new CheckResult(CheckResult::RES_PASSED,$this);
-
-        if (version_compare ( $actualVersion, $requiredVersion, $operator) !== true) {
-            $res->setResult(CheckResult::RES_FAILED,"Actual PHP Version ({$actualVersion}) does not meet the requirement {$operator} {$requiredVersion}");
-        }
-        return $res;
-    }
-}
-
-class PhpExtensionPrereqCheck extends PrereqCheck {
-    private $_name = 'PHP Extension: ';
-
-    public function check() {
-        $arg_list = func_get_args();
-        $extension = $arg_list[0];
-        $this->name = $this->_name . $extension;
-
-        $res = new CheckResult(CheckResult::RES_PASSED,$this);
-
-        if (extension_loaded($extension) !== true) {
-            $res->setResult(CheckResult::RES_FAILED,"Extension '{$extension}'' not loaded.");
-        }
-        return $res;
-    }
-}
-
-
-class PhpIniPrereqCheck extends PrereqCheck {
-    private $_name = 'PHP Setting: ';
-
-    public function check() {
-        $arg_list = func_get_args();
-        $param = $arg_list[0];
-        $compareFunct = $arg_list[1];
-        $this->name = $this->_name . $param;
-
-        $res = new CheckResult(CheckResult::RES_PASSED,$this);
-
-        $value = ini_get($param);
-        return $compareFunct($value);
     }
 }
