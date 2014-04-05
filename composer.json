@@ -1,0 +1,19 @@
+{
+    "name": "bylexus/php-prereqcheck",
+    "type": "library",
+    "description": "Helper class to create Prerequisite Check scripts for your software packages",
+    "keywords": ["prerequisite","check","system","requirements"],
+    "homepage": "https://github.com/bylexus/php-prereqcheck",
+    "license": "copyright",
+    "authors": [
+        {
+            "name": "Alexander Schenkel",
+            "email": "alex@alexi.ch",
+            "homepage": "http://www.alexi.ch/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
