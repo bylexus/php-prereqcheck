@@ -148,6 +148,6 @@ $pc->registerCheck('file_exists','FileExistsChecker');
 $pc->checkMandatory('file_exists','some_file.txt');
 ```
 
-Prerequisite yes, it can check itself :-)
+Prerequisite (yes, it can check itself :-) )
 ------------------------------------------
 * PHP >= 5.3.0
