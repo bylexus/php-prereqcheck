@@ -70,6 +70,9 @@ class PhpIniPrereqCheckTest extends PHPUnit_Framework_TestCase {
 		$dc = new PhpIniPrereqCheck();
 		$dc->check('error_reporting',E_WARNING,'bit_enabled');
 		$this->assertTrue($dc->getResult()->success());
-		
+	}
+
+	protected function tearDown() {
+		ini_set('display_errors','On');
 	}
 }

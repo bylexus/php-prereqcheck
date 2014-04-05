@@ -67,6 +67,9 @@ class PrereqChecker {
 
 
     public function registerCheck($checkName, $checkClass) {
+        if (!class_exists($checkClass)) throw new Exception("Class not found: ".$checkClass);
+        $parents = class_parents($checkClass);
+        if (!in_array('PrereqCheck', $parents)) throw new Exception('Class does not inherit PrereqCheck');
         $this->_checks[$checkName] = $checkClass;
     }
 

@@ -9,6 +9,6 @@ class PhpVersionPrereqCheckTest extends PHPUnit_Framework_TestCase {
 
 		$dc->check('<','5.2.0');
 		$this->assertTrue($dc->getResult()->failed());
-		$this->assertEquals("Actual PHP Version (".php_version().") does not meet the requirement < 5.2.0",$dc->getResult()->message);
+		$this->assertEquals("Actual PHP Version (".phpversion().") does not meet the requirement < 5.2.0",$dc->getResult()->message);
 	}
 }
