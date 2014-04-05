@@ -13,17 +13,22 @@ if ($pc->getMode() == 'web') {
     echo '<pre style="background-color: #AAA; border: 1px solid black; padding: 10px;">';
 }
 
-$pc->check('php_version','>=','5.3.0');
+$pc->checkMandatory('php_version','>=','5.3.0');
 
-$pc->check('php_extension','gd');
-$pc->check('php_extension','mbstring');
-$pc->check('php_extension','pdo');
-$pc->check('php_extension','pdo_pgsql');
-$pc->check('php_extension','xml');
-$pc->check('php_extension','soap');
-$pc->check('php_extension','openssl');
+$pc->checkMandatory('php_extension','gd');
+$pc->checkMandatory('php_extension','mbstring');
+$pc->checkMandatory('php_extension','pdo');
+$pc->checkMandatory('php_extension','pdo_pgsql');
+$pc->checkMandatory('php_extension','xml');
+$pc->checkMandatory('php_extension','soap');
+$pc->checkMandatory('php_extension','openssl');
 
-$pc->check('php_ini','display_errors',E_NOTICE,'string', CheckResult::RES_WARNING);
+$pc->checkMandatory('php_ini','error_reporting',E_NOTICE,'bit_disabled');
+$pc->checkOptional('php_ini','display_errors','off','boolean');
+$pc->checkMandatory('php_ini','memory_limit','>=256MB','number');
+$pc->checkMandatory('dir_writable','/tmp/');
+$pc->checkMandatory('dir_writable','./');
+$pc->checkMandatory('dir_writable','/some/unknown/dir/');
 
 /*
 $pc->check('php_ini','display_errors', function($value) {

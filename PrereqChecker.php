@@ -4,6 +4,7 @@ require_once(dirname(__FILE__).'/lib/PrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/PhpVersionPrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/PhpExtensionPrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/PhpIniPrereqCheck.php');
+require_once(dirname(__FILE__).'/lib/DirWritablePrereqCheck.php');
 
 /**
  * A Prerequisites checker for PHP. It enables the user to easily check for
@@ -13,16 +14,20 @@ require_once(dirname(__FILE__).'/lib/PhpIniPrereqCheck.php');
  * php_version: checks if the actual php version is egilible
  * php_extension: checks if a given php extension is loaded
  * php_ini: helper for checking php ini variables
+ * dir_writable: checks if the specified dir is writable
  *
- * Allows to define own checks. For an example, have a look at prereq-checker.php in the tools/ dir.
  * A brief example:
  *
  * $pc = new PrereqChecker();
  * $pc->check('php_version','>=','5.3.0');
  *
- * Outputs the results either on command line or as web output.
+ * Outputs the results either on command line or as web output, or keeps silent.
  */
 class PrereqChecker {
+    const RES_PASSED = 'passed';
+    const RES_WARNING = 'warning';
+    const RES_FAILED  = 'failed';
+
     private $_mode;
     private $_checks = array();
     private $_checkResults = array();
@@ -42,6 +47,7 @@ class PrereqChecker {
         $this->registerCheck('php_version', 'PhpVersionPrereqCheck');
         $this->registerCheck('php_extension', 'PhpExtensionPrereqCheck');
         $this->registerCheck('php_ini', 'PhpIniPrereqCheck');
+        $this->registerCheck('dir_writable', 'DirWritablePrereqCheck');
     }
 
     public function setMode($mode) {
@@ -72,61 +78,74 @@ class PrereqChecker {
         throw new Exception('Check class for '.$checkName.' not found.');
     }
 
-
-    public function check($checkName) {
+    public function checkMandatory($checkName) {
         $arg_list = func_get_args();
         array_shift($arg_list);
+        return $this->check($checkName, self::RES_FAILED, $arg_list);
+    }
+
+    public function checkOptional($checkName) {
+        $arg_list = func_get_args();
+        array_shift($arg_list);
+        return $this->check($checkName, self::RES_WARNING,$arg_list);
+    }
+
+    private function check($checkName, $severity = self::RES_FAILED, $arguments) {
         $checker = $this->getCheck($checkName);
-        $ret = call_user_func_array(array($checker,'check'), $arg_list);
+        $ret = call_user_func_array(array($checker,'check'), $arguments);
         if (!($ret instanceof CheckResult)) throw new Exception('check() function must return an instance of CheckResult.');
-        $this->outputCheckResult($ret);
-        $this->_checkResults[] = $ret;
+        $this->outputCheckResult($ret, $severity);
+        $this->_checkResults[$ret->success()?self::RES_PASSED:$severity] = $ret;
         return $ret;
     }
 
     public function reset() {
-        $this->_checkResults = array();
+        $this->_checkResults = array(
+            self::RES_PASSED => array(),
+            self::RES_WARNING => array(),
+            self::RES_FAILED => array()
+        );
     }
 
     public function didAllSucceed() {
-        foreach($this->_checkResults as $result) {
-            if ($result->success() !== true) return false;
+        if (count($this->_checkResults[self::RES_FAILED]) > 0) {
+            return false;
         }
         return true;
     }
 
-    private function outputCheckResult(CheckResult $res) {
-        $this->writeOutput($res);
-    }
-
-    private function writeOutput(CheckResult $res) {
+    private function outputCheckResult(CheckResult $res, $severity) {
         if ($this->_mode === 'cli') {
-            $this->writeOutputCli($res);
+            $this->writeOutputCli($res, $severity);
         } else if ($this->_mode === 'web') {
-            $this->writeOutputWeb($res);
+            $this->writeOutputWeb($res, $severity);
         }
     }
 
-    private function writeOutputCli(CheckResult $res) {
+    private function writeOutputCli(CheckResult $res, $severity) {
         $str = "\033[0m{$res->check->name}: ";
-        if ($res->passed()) {
+        if ($res->success()) {
             $str .= "\033[0;32mPASSED\033[0m";
-        } else if ($res->failed()) {
-            $str .= "\033[0;31mFAILED: \033[0m{$res->message}";
         } else {
-            $str .= "\033[0;33mWARNING: \033[0m{$res->message}";
+            if ($severity === self::RES_FAILED) {
+                $str .= "\033[0;31mFAILED: \033[0m{$res->message}";
+            } else {
+                $str .= "\033[0;33mWARNING: \033[0m{$res->message}";    
+            }
         }
         echo "{$str}\n";
     }
 
-    private function writeOutputWeb(PrereqCheck $res) {
+    private function writeOutputWeb(CheckResult $res, $severity) {
         $str = "<div>{$res->check->name}: ";
         if ($res->success()) {
             $str .= "<span style=\"color: #00FF00\">PASSED</span>";
-        } else if ($res->failed()) {
-            $str .= "<span style=\"color: #FF0000\">FAILURE: </span>{$res->message}";
-        } else {
-            $str .= "<span style=\"color: #FFFF00\">WARNING: </span>{$res->message}";
+        } else  {
+            if ($severity === self::RES_FAILED) {
+                $str .= "<span style=\"color: #FF0000\">FAILURE: </span>{$res->message}";
+            } else {
+                $str .= "<span style=\"color: #FFFF00\">WARNING: </span>{$res->message}";
+            }
         }
         echo "{$str}</div>";
     }
