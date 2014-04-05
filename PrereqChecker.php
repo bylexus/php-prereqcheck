@@ -1,4 +1,9 @@
 <?php
+/**
+ * PHP Prerequisite Checker
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
 require_once(dirname(__FILE__).'/lib/CheckResult.php');
 require_once(dirname(__FILE__).'/lib/PrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/PhpVersionPrereqCheck.php');
@@ -92,8 +97,8 @@ class PrereqChecker {
 
     private function check($checkName, $severity = self::RES_FAILED, $arguments) {
         $checker = $this->getCheck($checkName);
-        $ret = call_user_func_array(array($checker,'check'), $arguments);
-        if (!($ret instanceof CheckResult)) throw new Exception('check() function must return an instance of CheckResult.');
+        call_user_func_array(array($checker,'check'), $arguments);
+        $ret = $checker->getResult();
         $this->outputCheckResult($ret, $severity);
         $this->_checkResults[$ret->success()?self::RES_PASSED:$severity] = $ret;
         return $ret;

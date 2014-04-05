@@ -1,4 +1,10 @@
 <?php
+/**
+ * PHP Prerequisite Checker
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
+
 require_once(dirname(__FILE__).'/PrereqCheck.php');
 require_once(dirname(__FILE__).'/CheckResult.php');
 
@@ -10,11 +16,8 @@ class PhpExtensionPrereqCheck extends PrereqCheck {
         $extension = $arg_list[0];
         $this->name = $this->_name . $extension;
 
-        $res = new CheckResult(true,$this);
-
         if (extension_loaded($extension) !== true) {
-            $res->setFailed("Extension '{$extension}' not loaded.");
+            $this->setFailed("Extension '{$extension}' not loaded.");
         }
-        return $res;
     }
 }

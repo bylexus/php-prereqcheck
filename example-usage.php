@@ -1,12 +1,13 @@
 <?php
 /**
- * Demo File for the Prereq Checker.
+ * PHP Prerequisite Checker
+ * Demo Script for the Prereq Checker.
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
+
 $here = dirname(__FILE__);
 require_once($here.'/PrereqChecker.php');
-
-
-
 
 $pc = new PrereqChecker();
 if ($pc->getMode() == 'web') {
@@ -30,45 +31,35 @@ $pc->checkMandatory('dir_writable','/tmp/');
 $pc->checkMandatory('dir_writable','./');
 $pc->checkMandatory('dir_writable','/some/unknown/dir/');
 
-/*
-$pc->check('php_ini','display_errors', function($value) {
-    if ($value == true) throw new WarningException('Errors should not be displayed to the frontend.');
-    return true;
-});
-$pc->check('php_ini','error_reporting', function($value) {
-    if (E_NOTICE & $value == E_NOTICE) {
-        throw new FailureException('E_NOTICE must be disabled in php.ini.');
-    }
-    if (E_DEPRECATED & $value == E_DEPRECATED) {
-        throw new FailureException('E_DEPRECATED must be disabled in php.ini.');
-    }
-    return true;
-});
-
-$pc->check('php_ini','magic_quotes_gpc', function($value) {
-    if ($value == true) {
-        throw new FailureException('magic_quotes_gpc must be turned off.');
-    }
-    return true;
-});
-$pc->check('php_ini','magic_quotes_runtime', function($value) {
-    if ($value == true) {
-        throw new FailureException('magic_quotes_runtime must be turned off.');
-    }
-    return true;
-});
-
 class MyOwnChecker extends PrereqCheck {
     public $name = 'My Own Checker';
     public function check($myparam = null) {
-        if ($myparam === true) return true;
-        throw new WarningException('Oops, MyValue is not true!');
+        $res = new CheckResult(true,$this);
+        if ($myparam !== true) {
+            $res->setFailed("Uh Oh! MyParam must be set to true!");
+        }
+        return $res;
     }
 }
 
 $pc->registerCheck('own_checker','MyOwnChecker');
-$pc->check('own_checker',true);
-*/
+$pc->checkMandatory('own_checker',true);
+$pc->checkMandatory('own_checker',false);
+
+
+class FileExistsChecker extends PrereqCheck {
+    public function check($filename = null) {
+        $this->name = "File exists: {$filename}";
+        if (file_exists($filename)) {
+            $this->setSucceed();
+        } else {
+            $this->setFailed('File does not exists.');
+        }
+    }
+}
+$pc->registerCheck('file_exists','FileExistsChecker');
+$pc->checkMandatory('file_exists','some_file.txt');
+$pc->checkMandatory('file_exists','./example-usage.php');
 
 if ($pc->didAllSucceed()) {
     echo "All tests succeeded!\n";

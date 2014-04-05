@@ -1,4 +1,10 @@
 <?php
+/**
+ * PHP Prerequisite Checker
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
+
 require_once(dirname(__FILE__).'/PrereqCheck.php');
 require_once(dirname(__FILE__).'/CheckResult.php');
 
@@ -12,11 +18,8 @@ class PhpVersionPrereqCheck extends PrereqCheck {
         $actualVersion = phpversion();
         $this->name = $this->_name . "({$operator} {$requiredVersion})";
 
-        $res = new CheckResult(true,$this);
-
         if (version_compare ( $actualVersion, $requiredVersion, $operator) !== true) {
-            $res->setFailed("Actual PHP Version ({$actualVersion}) does not meet the requirement {$operator} {$requiredVersion}");
+            $this->setFailed("Actual PHP Version ({$actualVersion}) does not meet the requirement {$operator} {$requiredVersion}");
         }
-        return $res;
     }
 }

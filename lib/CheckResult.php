@@ -1,4 +1,10 @@
 <?php
+/**
+ * PHP Prerequisite Checker
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
+
 class CheckResult {
     public $check = null;
     public $message = '';
