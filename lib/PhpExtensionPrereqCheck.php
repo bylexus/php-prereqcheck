@@ -1,19 +1,21 @@
 <?php
-/**
- * PHP Prerequisite Checker
- *
- * (c) 2014 Alexander Schenkel, info@alexi.ch
- */
-
 require_once(dirname(__FILE__).'/PrereqCheck.php');
 require_once(dirname(__FILE__).'/CheckResult.php');
 
+/**
+ * PHP Prerequisite Checker - PHP Extension Checker
+ *
+ * Checks if a given PHP extension is available.
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
 class PhpExtensionPrereqCheck extends PrereqCheck {
     private $_name = 'PHP Extension: ';
 
-    public function check() {
-        $arg_list = func_get_args();
-        $extension = $arg_list[0];
+    /**
+     * @param string $extension Name of the required PHP extension
+     */
+    public function check($extension = null) {
         $this->name = $this->_name . $extension;
 
         if (extension_loaded($extension) !== true) {

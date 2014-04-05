@@ -1,25 +1,25 @@
 <?php
-/**
- * PHP Prerequisite Checker
- *
- * (c) 2014 Alexander Schenkel, info@alexi.ch
- */
-
 require_once(dirname(__FILE__).'/PrereqCheck.php');
 require_once(dirname(__FILE__).'/CheckResult.php');
 
+/**
+ * PHP Prerequisite Checker PHP ini value checker
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
 class PhpIniPrereqCheck extends PrereqCheck {
     private $_name = 'PHP Setting: ';
 
-    public function check() {
-        $arg_list = func_get_args();
-        $param = $arg_list[0];
-        $compareValue = $arg_list[1];
-        $type = $arg_list[2];
+
+    /**
+     * @param string $param Name of the PHP ini directive, e.g. 'display_errors'
+     * @param mixed $compareValue The value to compare against, e.g. 'Off'
+     * @param string $type The ini directive type, e.g. 'string', 'boolean', 'number'
+     */
+    public function check($param = null, $compareValue = null, $type = 'string') {
         $this->name = $this->_name . $param;
 
         $iniValue = ini_get($param);
-
         switch (strtolower($type)) {
             case 'bool':
             case 'boolean':

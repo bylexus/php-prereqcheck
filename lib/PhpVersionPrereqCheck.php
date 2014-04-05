@@ -1,20 +1,20 @@
 <?php
-/**
- * PHP Prerequisite Checker
- *
- * (c) 2014 Alexander Schenkel, info@alexi.ch
- */
-
 require_once(dirname(__FILE__).'/PrereqCheck.php');
 require_once(dirname(__FILE__).'/CheckResult.php');
 
+/**
+ * PHP Prerequisite Checker - PHP Version Check
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
 class PhpVersionPrereqCheck extends PrereqCheck {
     public $_name = 'PHP Version Check';
 
-    public function check() {
-        $arg_list = func_get_args();
-        $operator = $arg_list[0];
-        $requiredVersion = $arg_list[1];
+    /**
+     * @param string $operator A comparator operator, e.g. '>='
+     * @param string $requiredVersion The required PHP version
+     */
+    public function check($operator = '>=', $requiredVersion = '5.3.0') {
         $actualVersion = phpversion();
         $this->name = $this->_name . "({$operator} {$requiredVersion})";
 

@@ -95,7 +95,7 @@ class PrereqChecker {
         return $this->check($checkName, self::RES_WARNING,$arg_list);
     }
 
-    private function check($checkName, $severity = self::RES_FAILED, $arguments) {
+    protected function check($checkName, $severity = self::RES_FAILED, $arguments) {
         $checker = $this->getCheck($checkName);
         call_user_func_array(array($checker,'check'), $arguments);
         $ret = $checker->getResult();
@@ -119,7 +119,7 @@ class PrereqChecker {
         return true;
     }
 
-    private function outputCheckResult(CheckResult $res, $severity) {
+    protected function outputCheckResult(CheckResult $res, $severity) {
         if ($this->_mode === 'cli') {
             $this->writeOutputCli($res, $severity);
         } else if ($this->_mode === 'web') {
@@ -127,7 +127,7 @@ class PrereqChecker {
         }
     }
 
-    private function writeOutputCli(CheckResult $res, $severity) {
+    protected function writeOutputCli(CheckResult $res, $severity) {
         $str = "\033[0m{$res->check->name}: ";
         if ($res->success()) {
             $str .= "\033[0;32mPASSED\033[0m";
@@ -141,7 +141,7 @@ class PrereqChecker {
         echo "{$str}\n";
     }
 
-    private function writeOutputWeb(CheckResult $res, $severity) {
+    protected function writeOutputWeb(CheckResult $res, $severity) {
         $str = "<div>{$res->check->name}: ";
         if ($res->success()) {
             $str .= "<span style=\"color: #00FF00\">PASSED</span>";

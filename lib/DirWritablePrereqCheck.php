@@ -1,19 +1,19 @@
 <?php
-/**
- * PHP Prerequisite Checker
- *
- * (c) 2014 Alexander Schenkel, info@alexi.ch
- */
-
 require_once(dirname(__FILE__).'/PrereqCheck.php');
 require_once(dirname(__FILE__).'/CheckResult.php');
 
+/**
+ * PHP Prerequisite Checker - Checks if specified Dir is writable
+ *
+ * (c) 2014 Alexander Schenkel, info@alexi.ch
+ */
 class DirWritablePrereqCheck extends PrereqCheck {
     private $_name = 'Dir writable: ';
 
-    public function check() {
-        $arg_list = func_get_args();
-        $dir = $arg_list[0];
+    /**
+     * @param string $dir Path to a dir to check
+     */
+    public function check($dir = null) {
         $this->name = $this->_name . $dir;
 
         if (!is_dir($dir) || !is_writable($dir)) {

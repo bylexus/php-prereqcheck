@@ -1,6 +1,8 @@
 <?php
 /**
- * PHP Prerequisite Checker
+ * PHP Prerequisite Checker - class CheckResult
+ *
+ * A result class for a check - Returned by the ResultChecker after invoking a check.
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */

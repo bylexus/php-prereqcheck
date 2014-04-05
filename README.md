@@ -5,21 +5,60 @@ Helper class to create Prerequisite Checks. It allows you to easily create a Pre
 project, e.g. matching (php) version, installed extensions, settings etc. It also allows you to write your
 own checks to implement individual checks.
 
+Features
+----------
+* Simple to use API to create own prerequisite scripts / checks
+* Console, Web or silent (programmatic) output
+* Extensible: Write your own Check classes easily
+
+Planned features
+----------------
+* Output renderers to customize output
+* more built-in checks like http service availability, internet access, ...
+
 Sample usage
 ------------
 
 ```php
+# Include class and instantiate a PrereqChecker:
 require_once('PrereqChecker.php');
-
 $pc = new PrereqChecker();
 
+# Check PHP version:
 $pc->checkMandatory('php_version','>=','5.3.0');
+
+# Check for installed PHP extensions:
 $pc->checkMandatory('php_extension','gd');
 $pc->checkMandatory('php_extension','mbstring');
 $pc->checkMandatory('php_extension','pdo');
+
+# Check for php.ini settings:
 $pc->checkOptional('php_ini','display_errors','off','boolean');
 $pc->checkOptional('php_ini','memory_limit','>=256MB','number');
+$pc->checkOptional('php_ini','error_reporting',E_STRICT,'bit_enabled');
 
+# Create own checks:
+class FileExistsChecker extends PrereqCheck {
+    public function check($filename = null) {
+        $this->name = "File exists: {$filename}";
+        if (file_exists($filename)) {
+            $this->setSucceed();
+        } else {
+            $this->setFailed('File does not exists.');
+        }
+    }
+}
+$pc->registerCheck('file_exists','FileExistsChecker');
+$pc->checkMandatory('file_exists','some_file.txt');
+
+# Each check returns a CheckResult instance:
+$res = $pc->checkMandatory('php_version','>=','5.3.0');
+if ($res->success()) {
+	echo "Yes, your PHP version is compliant.";
+}
+
+
+# did all the checks succeed?
 if ($pc->didAllSucceed()) {
     echo "All tests succeeded!\n";
 } else {
@@ -109,7 +148,6 @@ $pc->registerCheck('file_exists','FileExistsChecker');
 $pc->checkMandatory('file_exists','some_file.txt');
 ```
 
-Documentation
----------------
-
-... TBD ...
+Prerequisite yes, it can check itself :-)
+------------------------------------------
+* PHP >= 5.3.0
