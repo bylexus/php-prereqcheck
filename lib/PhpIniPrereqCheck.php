@@ -70,6 +70,7 @@ class PhpIniPrereqCheck extends PrereqCheck {
 
     private function numberCompare($iniValue, $compareValue) {
         $matches = array();
+        $compareValue = preg_replace('/\s+/', '', $compareValue);
         preg_match('/^([<>=]*)([0-9.-]+)([a-zA-Z]*)$/', $compareValue, $matches);
         if (count($matches) !== 4) {
             throw new Exception('Error in Size definition.');
@@ -81,19 +82,19 @@ class PhpIniPrereqCheck extends PrereqCheck {
         $number = $matches[2].$matches[3];
         $iniBytes = $this->sizeStrToBytes($iniValue);
         $numberBytes = $this->sizeStrToBytes($number);
-        $passed = true;
+        $passed = false;
         switch ($operator) {
             case '>':
-                if ($numberBytes > $iniBytes ) $passed = false; break;
+                if ($iniBytes > $numberBytes ) $passed = true; break;
             case '>=':
-                if ($numberBytes >= $iniBytes ) $passed = false; ;break;
+                if ($iniBytes >= $numberBytes ) $passed = true; ;break;
             case '<':
-                if ($numberBytes < $iniBytes ) $passed = false; break;
+                if ($iniBytes < $numberBytes ) $passed = true; break;
             case '<=':
-                if ($numberBytes <= $iniBytes ) $passed = false; break;
+                if ($iniBytes <= $numberBytes ) $passed = true; break;
             case '=':
             default:
-                if ($numberBytes !== $iniBytes ) $passed = false; break;
+                if ($iniBytes !== $numberBytes ) $passed = true; break;
         }
         if (!$passed) {
             $this->setFailed("Ini Size '{$iniValue}' does not match the criteria '{$operator} {$number}'");

@@ -18,8 +18,12 @@ class PhpExtensionPrereqCheck extends PrereqCheck {
     public function check($extension = null) {
         $this->name = $this->_name . $extension;
 
-        if (extension_loaded($extension) !== true) {
+        if ($this->extension_loaded($extension) !== true) {
             $this->setFailed("Extension '{$extension}' not loaded.");
         }
+    }
+
+    protected function extension_loaded($extension) {
+        return extension_loaded($extension);
     }
 }
