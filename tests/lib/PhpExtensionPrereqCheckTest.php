@@ -9,6 +9,12 @@ class MockPhpExtCheck extends PhpExtensionPrereqCheck {
 }
 
 class PhpExtensionPrereqCheckTest extends PHPUnit_Framework_TestCase {
+	public function testCheckRegisteredAsInternal() {
+		$pc = new PrereqChecker();
+		$check = $pc->getCheck('php_extension');
+		$this->assertInstanceOf('PhpExtensionPrereqCheck',$check);
+	}
+
 	public function testCheckAvailable() {
 		$dc = new MockPhpExtCheck();
 		$dc->exists = true;

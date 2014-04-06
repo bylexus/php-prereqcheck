@@ -2,6 +2,12 @@
 require_once(dirname(__FILE__).'/../../PrereqChecker.php');
 
 class PhpIniPrereqCheckTest extends PHPUnit_Framework_TestCase {
+	public function testCheckRegisteredAsInternal() {
+		$pc = new PrereqChecker();
+		$check = $pc->getCheck('php_ini');
+		$this->assertInstanceOf('PhpIniPrereqCheck',$check);
+	}
+
 	public function testCheckString() {
 		ini_set('date.timezone', 'Europe/Zurich');
 		$dc = new PhpIniPrereqCheck();

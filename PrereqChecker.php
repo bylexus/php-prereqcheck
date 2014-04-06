@@ -10,6 +10,7 @@ require_once(dirname(__FILE__).'/lib/PhpVersionPrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/PhpExtensionPrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/PhpIniPrereqCheck.php');
 require_once(dirname(__FILE__).'/lib/DirWritablePrereqCheck.php');
+require_once(dirname(__FILE__).'/lib/DbPdoConnectionPrereqCheck.php');
 
 /**
  * A Prerequisites checker for PHP. It enables the user to easily check for
@@ -53,6 +54,7 @@ class PrereqChecker {
         $this->registerCheck('php_extension', 'PhpExtensionPrereqCheck');
         $this->registerCheck('php_ini', 'PhpIniPrereqCheck');
         $this->registerCheck('dir_writable', 'DirWritablePrereqCheck');
+        $this->registerCheck('db_pdo_connection', 'DbPdoConnectionPrereqCheck');
     }
 
     public function setMode($mode) {

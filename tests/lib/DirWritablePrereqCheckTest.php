@@ -2,6 +2,12 @@
 require_once(dirname(__FILE__).'/../../PrereqChecker.php');
 
 class DirWritablePrereqCheckTest extends PHPUnit_Framework_TestCase {
+	public function testCheckRegisteredAsInternal() {
+		$pc = new PrereqChecker();
+		$check = $pc->getCheck('dir_writable');
+		$this->assertInstanceOf('DirWritablePrereqCheck',$check);
+	}
+
 	public function testCheckWritable() {
 		$tmpfile = tempnam('/tmp/test', 'foo');
 		$dc = new DirWritablePrereqCheck();

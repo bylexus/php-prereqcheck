@@ -37,6 +37,12 @@ $pc->checkOptional('php_ini','display_errors','off','boolean');
 $pc->checkOptional('php_ini','memory_limit','>=256MB','number');
 $pc->checkOptional('php_ini','error_reporting',E_STRICT,'bit_enabled');
 
+# Check if dir exists and is writable:
+$pc->checkMandatory('dir_writable','/tmp/');
+
+# Check if a PDO DB Connection could be established:
+$pc->checkOptional('db_pdo_connection',array('dsn'=>'mysql:host=127.0.0.1','username'=>'test','password'=>'test'));
+
 # Create own checks:
 class FileExistsChecker extends PrereqCheck {
     public function check($filename = null) {
@@ -119,6 +125,23 @@ Example:
 ```php
 $pc->checkMandatory('dir_writable','/tmp/');
 ```
+
+# db_pdo_connection
+
+Checks if a PDO connection to a database can be established.
+
+Example:
+```php
+$pc->checkOptional('db_pdo_connection',array('dsn'=>'mysql:host=127.0.0.1','username'=>'test','password'=>'test'));
+```
+
+*Note:*
+
+The options array must contain the following keys:
+
+* dsn: The PDO dsn
+* username: The username to connect
+* password. The password to use
 
 Write your own checks
 ----------------------

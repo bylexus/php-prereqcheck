@@ -31,6 +31,8 @@ $pc->checkMandatory('dir_writable','/tmp/');
 $pc->checkMandatory('dir_writable','./');
 $pc->checkMandatory('dir_writable','/some/unknown/dir/');
 
+$pc->checkOptional('db_pdo_connection',array('dsn' => 'mysql:host=127.0.0.1;dbname=mydb','username'=>'root','password'=>''));
+
 class MyOwnChecker extends PrereqCheck {
     public $name = 'My Own Checker';
     public function check($myparam = null) {
