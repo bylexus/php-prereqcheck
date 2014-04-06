@@ -126,7 +126,7 @@ Example:
 $pc->checkMandatory('dir_writable','/tmp/');
 ```
 
-# db_pdo_connection
+### db_pdo_connection
 
 Checks if a PDO connection to a database can be established.
 
