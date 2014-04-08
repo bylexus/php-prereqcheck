@@ -9,6 +9,12 @@ Features
 ----------
 * Simple to use API to create own prerequisite scripts / checks
 * Console, Web or silent (programmatic) output
+* Builtin-checks:
+  * php version check
+  * php ini settings check
+  * php extension checks
+  * PDO DB connection check
+  * dir writable check
 * Extensible: Write your own Check classes easily
 
 Planned features
@@ -36,6 +42,8 @@ $pc->checkMandatory('php_extension','pdo');
 $pc->checkOptional('php_ini','display_errors','off','boolean');
 $pc->checkOptional('php_ini','memory_limit','>=256MB','number');
 $pc->checkOptional('php_ini','error_reporting',E_STRICT,'bit_enabled');
+# check a php.ini string using a regular expression:
+$pc->checkOptional('php_ini','date.timezone','/Europe\/.+/','string');
 
 # Check if dir exists and is writable:
 $pc->checkMandatory('dir_writable','/tmp/');
@@ -101,7 +109,8 @@ possible to determine the type of value, a comparison function is needed in the 
 
 Example:
 ```php
-$pc->checkOptional('php_ini','default_timezone','Europe/Zurich','string');
+$pc->checkOptional('php_ini','date.timezone','Europe/Zurich','string');
+$pc->checkOptional('php_ini','date.timezone','/Europe\/.+/','string');
 $pc->checkOptional('php_ini','display_errors','off','boolean');
 $pc->checkOptional('php_ini','error_reporting',E_STRICT,'bit_enabled');
 $pc->checkOptional('php_ini','error_reporting',E_NOTICE,'bit_disabled');
@@ -111,7 +120,7 @@ $pc->checkOptional('php_ini','memory_limit','>=128M','number');
 Possible comparison functions:
 
 * boolean: Checks if the given value is true-ish or false-ish (e.g. 'Off' means false)
-* string: exact string match (e.g. default_timezone = 'Europe/Zurich')
+* string: exact string match (e.g. default_timezone = 'Europe/Zurich'). If encapsulated in '/' (e.g. /search/), the string is taken as Perl Regular Expression.
 * enabled: Checks if the given bit(s) are set in the ini value (e.g. checks if E_WARNING is set in error_reporting)
 * bit_disabled: Checks if the given bit(s) are NOT set in the ini value (e.g. checks if E_NOTICE is disabled in error_reporting)
 * number: Checks a number value against a comparison, e.g. if memory_limit is >= 512m.

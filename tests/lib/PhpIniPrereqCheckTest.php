@@ -20,6 +20,18 @@ class PhpIniPrereqCheckTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("ini value 'Europe/Berlin' does not match expected: 'Europe/Zurich'",$dc->getResult()->message);
 	}
 
+    public function testCheckRegexString() {
+        ini_set('date.timezone', 'Europe/Zurich');
+        $dc = new PhpIniPrereqCheck();
+        $dc->check('date.timezone','/Europe\/.+/','string');
+        $this->assertTrue($dc->getResult()->success(),"String Check does not recognize Regular Expressions.");
+
+        ini_set('date.timezone', 'Americas/Pacific');
+        $dc = new PhpIniPrereqCheck();
+        $dc->check('date.timezone','/Europe\/.+/','string');
+        $this->assertTrue($dc->getResult()->failed(),"String Check does not recognize Regular Expressions.");
+    }
+
 	public function testCheckNumber() {
 		ini_set('memory_limit', '32M');
 		$dc = new PhpIniPrereqCheck();
@@ -72,7 +84,7 @@ class PhpIniPrereqCheckTest extends PHPUnit_Framework_TestCase {
 		$dc->check('error_reporting',E_NOTICE,'bit_enabled');
 		$this->assertTrue($dc->getResult()->failed());
 		$this->assertEquals("bitfield value '8' is disabled, should be enabled.",$dc->getResult()->message);
-		
+
 		$dc = new PhpIniPrereqCheck();
 		$dc->check('error_reporting',E_WARNING,'bit_enabled');
 		$this->assertTrue($dc->getResult()->success());

@@ -36,8 +36,16 @@ class PhpIniPrereqCheck extends PrereqCheck {
     }
 
     private function stringCompare($iniValue, $compareValue) {
-        if ($iniValue !== $compareValue) {
+        if (preg_match('/^\/.*\/$/',$compareValue)) {
+            return $this->pregCompare($iniValue,$compareValue);
+        } else if ($iniValue !== $compareValue) {
             $this->setFailed("ini value '{$iniValue}' does not match expected: '{$compareValue}'");
+        }
+    }
+
+    private function pregCompare($iniValue,$compareValue) {
+        if (!preg_match($compareValue,$iniValue)) {
+            $this->setFailed("ini value '{$iniValue}' does not match regular expression: '{$compareValue}'");
         }
     }
 
@@ -62,7 +70,7 @@ class PhpIniPrereqCheck extends PrereqCheck {
     private function bitEnabledCompare($iniValue, $compareValue) {
         $compareValue = (int)$compareValue;
         $iniValue = (int)$iniValue;
-        
+
         if (($iniValue & $compareValue) !== $compareValue) {
             $this->setFailed("bitfield value '{$compareValue}' is disabled, should be enabled.");
         }
