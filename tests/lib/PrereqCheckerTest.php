@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(__FILE__).'/../../PrereqChecker.php');
+require_once(dirname(__FILE__).'/../../vendor/autoload.php');
 
-class TestPrereqCheckerCheckClass extends PrereqCheck {
+class TestPrereqCheckerCheckClass extends \Prereq\PrereqCheck {
 	public function check($shouldFail = false) {
 		if ($shouldFail) {
 			$this->result->setFailed('failed!');
@@ -16,11 +16,11 @@ class TestPrereqCheckerDummyClass {
 class PrereqCheckerTest extends PHPUnit_Framework_TestCase {
 	private $pc;
 	protected function setUp() {
-		$this->pc = new PrereqChecker();
+		$this->pc = new \Prereq\PrereqChecker();
 	}
 
 	public function testConstruct() {
-		$this->assertInstanceOf('PrereqChecker',$this->pc);
+		$this->assertInstanceOf('Prereq\PrereqChecker',$this->pc);
 	}
 
 	public function testSetMode() {
@@ -30,7 +30,7 @@ class PrereqCheckerTest extends PHPUnit_Framework_TestCase {
 
 	public function testGetCheck() {
 		$check = $this->pc->getCheck('php_version');
-		$this->assertInstanceOf('PhpVersionPrereqCheck',$check);
+		$this->assertInstanceOf('Prereq\PhpVersionPrereqCheck',$check);
 	}
 
 	/**
@@ -73,7 +73,7 @@ class PrereqCheckerTest extends PHPUnit_Framework_TestCase {
 	public function testCheckMandatorySuccess() {
 		$this->pc->registerCheck('my_check','TestPrereqCheckerCheckClass');
 		$res = $this->pc->checkMandatory('my_check',false);
-		$this->assertInstanceOf('CheckResult',$res);
+		$this->assertInstanceOf('Prereq\CheckResult',$res);
 		$this->assertTrue($res->success());
 	}
 
@@ -85,7 +85,7 @@ class PrereqCheckerTest extends PHPUnit_Framework_TestCase {
 	public function testCheckOptionalSuccess() {
 		$this->pc->registerCheck('my_check','TestPrereqCheckerCheckClass');
 		$res = $this->pc->checkOptional('my_check',false);
-		$this->assertInstanceOf('CheckResult',$res);
+		$this->assertInstanceOf('Prereq\CheckResult',$res);
 		$this->assertTrue($res->success());
 	}
 
@@ -95,7 +95,7 @@ class PrereqCheckerTest extends PHPUnit_Framework_TestCase {
 	public function testCheckMandatoryFailed() {
 		$this->pc->registerCheck('my_check','TestPrereqCheckerCheckClass');
 		$res = $this->pc->checkMandatory('my_check',true);
-		$this->assertInstanceOf('CheckResult',$res);
+		$this->assertInstanceOf('Prereq\CheckResult',$res);
 		$this->assertTrue($res->failed());
 	}
 
@@ -105,7 +105,7 @@ class PrereqCheckerTest extends PHPUnit_Framework_TestCase {
 	public function testCheckOptionalFailed() {
 		$this->pc->registerCheck('my_check','TestPrereqCheckerCheckClass');
 		$res = $this->pc->checkOptional('my_check',true);
-		$this->assertInstanceOf('CheckResult',$res);
+		$this->assertInstanceOf('Prereq\CheckResult',$res);
 		$this->assertTrue($res->failed());
 	}
 }

@@ -1,12 +1,12 @@
 <?php
-require_once(dirname(__FILE__).'/PrereqCheck.php');
-require_once(dirname(__FILE__).'/CheckResult.php');
 
 /**
  * PHP Prerequisite Checker - Checks if specified Dir is writable
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
+namespace Prereq;
+
 class DirWritablePrereqCheck extends PrereqCheck {
     private $_name = 'Dir writable: ';
 

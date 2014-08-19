@@ -22,13 +22,35 @@ Planned features
 * Output renderers to customize output
 * more built-in checks like http service availability, internet access, ...
 
+Installation using composer
+---------------------------
+
+```bash
+$ composer install bylexus/php-prereqcheck
+```
+
+Installation without composer
+-----------------------------
+
+Just clone the git repo:
+
+```bash
+git clone https://github.com/bylexus/php-prereqcheck.git
+```
+
 Sample usage
 ------------
 
+For a working example, see `example-usage.php`.
+
 ```php
-# Include class and instantiate a PrereqChecker:
-require_once('PrereqChecker.php');
-$pc = new PrereqChecker();
+# Include composer's autoload facility (recommended):
+require_once('vendor/autoload.php');
+
+# OR use the own internal autoloader, whatever fits you best:
+require_once($here.'/prereq-loader.php');
+
+$pc = new \Prereq\PrereqChecker();
 
 # Check PHP version:
 $pc->checkMandatory('php_version','>=','5.3.0');
@@ -52,7 +74,7 @@ $pc->checkMandatory('dir_writable','/tmp/');
 $pc->checkOptional('db_pdo_connection',array('dsn'=>'mysql:host=127.0.0.1','username'=>'test','password'=>'test'));
 
 # Create own checks:
-class FileExistsChecker extends PrereqCheck {
+class FileExistsChecker extends \Prereq\PrereqCheck {
     public function check($filename = null) {
         $this->name = "File exists: {$filename}";
         if (file_exists($filename)) {
@@ -155,12 +177,12 @@ The options array must contain the following keys:
 Write your own checks
 ----------------------
 
-Writing your own checks is very simple. Just provide a `PrereqCheck` class and register it with the PrereqChecker.
+Writing your own checks is very simple. Just provide a `\Prereq\PrereqCheck` class and register it with the PrereqChecker.
 Then you can run the defined check:
 
 ```php
 # Define a class that extends PrereqCheck and implements the check() function:
-class FileExistsChecker extends PrereqCheck {
+class FileExistsChecker extends \Prereq\PrereqCheck {
     public function check($filename = null) {
         $this->name = "File exists: {$filename}";
         if (file_exists($filename)) {
@@ -183,3 +205,12 @@ $pc->checkMandatory('file_exists','some_file.txt');
 Prerequisite (yes, it can check itself :-) )
 ------------------------------------------
 * PHP >= 5.3.0
+
+Version History
+---------------
+
+* 0.1.1 First release
+* 0.2.0 Introduced Namespace `Prereq`, and make use of the Composer autoload facility.
+        NOTE: This version is NO LONGER compatible with 0.1.1!
+
+

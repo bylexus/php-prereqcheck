@@ -4,13 +4,8 @@
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
-require_once(dirname(__FILE__).'/lib/CheckResult.php');
-require_once(dirname(__FILE__).'/lib/PrereqCheck.php');
-require_once(dirname(__FILE__).'/lib/PhpVersionPrereqCheck.php');
-require_once(dirname(__FILE__).'/lib/PhpExtensionPrereqCheck.php');
-require_once(dirname(__FILE__).'/lib/PhpIniPrereqCheck.php');
-require_once(dirname(__FILE__).'/lib/DirWritablePrereqCheck.php');
-require_once(dirname(__FILE__).'/lib/DbPdoConnectionPrereqCheck.php');
+
+namespace Prereq;
 
 /**
  * A Prerequisites checker for PHP. It enables the user to easily check for
@@ -49,18 +44,25 @@ class PrereqChecker {
         $this->reset();
     }
 
+    public static function autoload($name) {
+        $path = explode('\\',$name);
+        if (count($path) == 2 && $path[0] == 'Prereq') {
+            require_once(__DIR__.DIRECTORY_SEPARATOR.$path[1].'.php');
+        }
+    }
+
     private function addInternalChecks() {
-        $this->registerCheck('php_version', 'PhpVersionPrereqCheck');
-        $this->registerCheck('php_extension', 'PhpExtensionPrereqCheck');
-        $this->registerCheck('php_ini', 'PhpIniPrereqCheck');
-        $this->registerCheck('dir_writable', 'DirWritablePrereqCheck');
-        $this->registerCheck('db_pdo_connection', 'DbPdoConnectionPrereqCheck');
+        $this->registerCheck('php_version', '\Prereq\PhpVersionPrereqCheck');
+        $this->registerCheck('php_extension', '\Prereq\PhpExtensionPrereqCheck');
+        $this->registerCheck('php_ini', '\Prereq\PhpIniPrereqCheck');
+        $this->registerCheck('dir_writable', '\Prereq\DirWritablePrereqCheck');
+        $this->registerCheck('db_pdo_connection', '\Prereq\DbPdoConnectionPrereqCheck');
     }
 
     public function setMode($mode) {
         if (in_array($mode,array('cli','web','silent'))) {
             $this->_mode = $mode;
-        } else throw new Exception("Mode must be one of 'web','cli'");
+        } else throw new \Exception("Mode must be one of 'web','cli'");
     }
 
     public function getMode() {
@@ -69,9 +71,9 @@ class PrereqChecker {
 
 
     public function registerCheck($checkName, $checkClass) {
-        if (!class_exists($checkClass)) throw new Exception("Class not found: ".$checkClass);
+        if (!class_exists($checkClass)) throw new \Exception("Class not found: ".$checkClass);
         $parents = class_parents($checkClass);
-        if (!in_array('PrereqCheck', $parents)) throw new Exception('Class does not inherit PrereqCheck');
+        if (!in_array('Prereq\PrereqCheck', $parents)) throw new \Exception('Class does not inherit PrereqCheck');
         $this->_checks[$checkName] = $checkClass;
     }
 
@@ -85,7 +87,7 @@ class PrereqChecker {
                 }
             }
         }
-        throw new Exception('Check class for '.$checkName.' not found.');
+        throw new \Exception('Check class for '.$checkName.' not found.');
     }
 
     public function checkMandatory($checkName) {

@@ -1,7 +1,4 @@
 <?php
-require_once(dirname(__FILE__).'/PrereqCheck.php');
-require_once(dirname(__FILE__).'/CheckResult.php');
-
 /**
  * PHP Prerequisite Checker - PHP Extension Checker
  *
@@ -9,6 +6,8 @@ require_once(dirname(__FILE__).'/CheckResult.php');
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
+namespace Prereq;
+
 class PhpExtensionPrereqCheck extends PrereqCheck {
     private $_name = 'PHP Extension: ';
 

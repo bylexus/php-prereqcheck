@@ -7,6 +7,8 @@
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
 
+namespace Prereq;
+
 class CheckResult {
     public $check = null;
     public $message = '';

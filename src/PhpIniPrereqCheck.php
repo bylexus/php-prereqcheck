@@ -1,12 +1,11 @@
 <?php
-require_once(dirname(__FILE__).'/PrereqCheck.php');
-require_once(dirname(__FILE__).'/CheckResult.php');
-
 /**
  * PHP Prerequisite Checker PHP ini value checker
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
+namespace Prereq;
+
 class PhpIniPrereqCheck extends PrereqCheck {
     private $_name = 'PHP Setting: ';
 

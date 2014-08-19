@@ -1,21 +1,21 @@
 <?php
-require_once(dirname(__FILE__).'/../../PrereqChecker.php');
+require_once(dirname(__FILE__).'/../../vendor/autoload.php');
 
-class DummyCheck extends PrereqCheck {
+class DummyCheck extends \Prereq\PrereqCheck {
 	public function check() {}
 }
 
 class CheckResultTest extends PHPUnit_Framework_TestCase {
 	public function testConstruction() {
 		$pc = new DummyCheck();
-		$cr = new CheckResult(true,$pc);
-		$this->assertInstanceOf('PrereqCheck',$cr->check);
+		$cr = new \Prereq\CheckResult(true,$pc);
+		$this->assertInstanceOf('Prereq\PrereqCheck',$cr->check);
 		$this->assertTrue($cr->success());
 	}
 
 	public function testSetSucceed() {
 		$pc = new DummyCheck();
-		$cr = new CheckResult(true,$pc);
+		$cr = new \Prereq\CheckResult(true,$pc);
 
 		$cr->setSucceed();
 		$this->assertTrue($cr->success());
@@ -24,7 +24,7 @@ class CheckResultTest extends PHPUnit_Framework_TestCase {
 
 	public function testSetFailed() {
 		$pc = new DummyCheck();
-		$cr = new CheckResult(true,$pc);
+		$cr = new \Prereq\CheckResult(true,$pc);
 		$cr->setFailed('fail');
 		$this->assertTrue($cr->failed());
 		$this->assertEquals('fail',$cr->message);
@@ -32,7 +32,7 @@ class CheckResultTest extends PHPUnit_Framework_TestCase {
 
 	public function testSuccess() {
 		$pc = new DummyCheck();
-		$cr = new CheckResult(true,$pc);
+		$cr = new \Prereq\CheckResult(true,$pc);
 		$this->assertTrue($cr->success());
 
 		$cr->setFailed('fail');
@@ -41,7 +41,7 @@ class CheckResultTest extends PHPUnit_Framework_TestCase {
 
 	public function testFailed() {
 		$pc = new DummyCheck();
-		$cr = new CheckResult(false,$pc);
+		$cr = new \Prereq\CheckResult(false,$pc);
 		$this->assertTrue($cr->failed());
 
 		$cr->setSucceed();

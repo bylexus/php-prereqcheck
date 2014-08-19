@@ -1,7 +1,7 @@
 <?php
-require_once(dirname(__FILE__).'/../../PrereqChecker.php');
+require_once(dirname(__FILE__).'/../../vendor/autoload.php');
 
-class MockPhpExtCheck extends PhpExtensionPrereqCheck {
+class MockPhpExtCheck extends \Prereq\PhpExtensionPrereqCheck {
 	public $exists = true;
 	protected function extension_loaded($ext) {
 		return $this->exists;
@@ -10,9 +10,9 @@ class MockPhpExtCheck extends PhpExtensionPrereqCheck {
 
 class PhpExtensionPrereqCheckTest extends PHPUnit_Framework_TestCase {
 	public function testCheckRegisteredAsInternal() {
-		$pc = new PrereqChecker();
+		$pc = new \Prereq\PrereqChecker();
 		$check = $pc->getCheck('php_extension');
-		$this->assertInstanceOf('PhpExtensionPrereqCheck',$check);
+		$this->assertInstanceOf('Prereq\PhpExtensionPrereqCheck',$check);
 	}
 
 	public function testCheckAvailable() {

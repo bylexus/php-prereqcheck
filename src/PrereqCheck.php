@@ -12,6 +12,8 @@
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
+namespace Prereq;
+
 abstract class PrereqCheck {
 	public $name = "Insert check name here";
 	protected $result;

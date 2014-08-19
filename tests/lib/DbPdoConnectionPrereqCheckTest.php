@@ -1,7 +1,6 @@
 <?php
-require_once(dirname(__FILE__).'/../../PrereqChecker.php');
-
-class DbPdoCheckMock extends DbPdoConnectionPrereqCheck {
+require_once(dirname(__FILE__).'/../../vendor/autoload.php');
+class DbPdoCheckMock extends \Prereq\DbPdoConnectionPrereqCheck {
 	public $dsn;
 	public $user;
 	public $pw;
@@ -21,13 +20,13 @@ class DbPdoConnectionPrereqCheckTest extends PHPUnit_Framework_TestCase {
 	private $pc;
 
 	protected function setUp() {
-		$this->pc = new PrereqChecker();
+		$this->pc = new \Prereq\PrereqChecker();
 	}
 
 	public function testCheckRegisteredAsInternal() {
 		
 		$check = $this->pc->getCheck('db_pdo_connection');
-		$this->assertInstanceOf('DbPdoConnectionPrereqCheck',$check,'db_pdo_connection not registered as internal Check.');
+		$this->assertInstanceOf('Prereq\DbPdoConnectionPrereqCheck',$check,'db_pdo_connection not registered as internal Check.');
 	}
 
 	/**

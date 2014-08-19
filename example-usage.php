@@ -7,9 +7,13 @@
  */
 
 $here = dirname(__FILE__);
-require_once($here.'/PrereqChecker.php');
+// Use composer's autoload facility:
+require_once($here.'/vendor/autoload.php');
 
-$pc = new PrereqChecker();
+// or use the own autoloader:
+//require_once($here.'/prereq-loader.php');
+
+$pc = new \Prereq\PrereqChecker();
 if ($pc->getMode() == 'web') {
     echo '<pre style="background-color: #AAA; border: 1px solid black; padding: 10px;">';
 }
@@ -33,10 +37,10 @@ $pc->checkMandatory('dir_writable','/some/unknown/dir/');
 
 $pc->checkOptional('db_pdo_connection',array('dsn' => 'mysql:host=127.0.0.1;dbname=mydb','username'=>'root','password'=>''));
 
-class MyOwnChecker extends PrereqCheck {
+class MyOwnChecker extends \Prereq\PrereqCheck {
     public $name = 'My Own Checker';
     public function check($myparam = null) {
-        $res = new CheckResult(true,$this);
+        $res = new \Prereq\CheckResult(true,$this);
         if ($myparam !== true) {
             $res->setFailed("Uh Oh! MyParam must be set to true!");
         }
@@ -49,7 +53,7 @@ $pc->checkMandatory('own_checker',true);
 $pc->checkMandatory('own_checker',false);
 
 
-class FileExistsChecker extends PrereqCheck {
+class FileExistsChecker extends \Prereq\PrereqCheck {
     public function check($filename = null) {
         $this->name = "File exists: {$filename}";
         if (file_exists($filename)) {

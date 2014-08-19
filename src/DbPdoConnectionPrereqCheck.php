@@ -1,12 +1,11 @@
 <?php
-require_once(dirname(__FILE__).'/PrereqCheck.php');
-require_once(dirname(__FILE__).'/CheckResult.php');
-
 /**
  * PHP Prerequisite Checker - DB PDO Connection Check
  *
  * (c) 2014 Alexander Schenkel, info@alexi.ch
  */
+namespace Prereq;
+
 class DbPdoConnectionPrereqCheck extends PrereqCheck {
     public $_name = 'DB PDO Connection';
 
@@ -23,13 +22,13 @@ class DbPdoConnectionPrereqCheck extends PrereqCheck {
     		if (!$ret) {
     			$this->setFailed('Connection could not be established.');
     		}
-    	} catch (PDOException $e) {
+    	} catch (\PDOException $e) {
     		$this->setFailed('Connection could not be established.');
     	}
     }
 
     protected function pdoConnect($dsn, $user, $pw) {
-    	$pdo = new PDO($dsn,$user,$pw);
+    	$pdo = new \PDO($dsn,$user,$pw);
     	if ($pdo) return true;
     	return false;
     }
