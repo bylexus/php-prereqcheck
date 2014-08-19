@@ -25,6 +25,20 @@ Planned features
 Installation using composer
 ---------------------------
 
+Because this is a "zero" version (0.x.y), composer needs some hints to install this package:
+
+`composer.json`:
+```json
+{
+    "minimum-stability": "dev",
+}
+```
+then:
+```bash
+$ composer require bylexus/php-prereqcheck
+```
+
+or install it using the `--dev` flag:
 ```bash
 $ composer require --dev bylexus/php-prereqcheck
 ```
@@ -37,6 +51,8 @@ Just clone the git repo:
 ```bash
 git clone https://github.com/bylexus/php-prereqcheck.git
 ```
+
+Then just require the `prereq-loader.php` file to setup the autoloader.
 
 Sample usage
 ------------
