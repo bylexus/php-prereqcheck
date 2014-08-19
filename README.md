@@ -30,7 +30,7 @@ Because this is a "zero" version (0.x.y), composer needs some hints to install t
 `composer.json`:
 ```json
 {
-    "minimum-stability": "dev",
+    "minimum-stability": "dev"
 }
 ```
 then:
