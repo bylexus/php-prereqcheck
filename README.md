@@ -26,7 +26,7 @@ Installation using composer
 ---------------------------
 
 ```bash
-$ composer install bylexus/php-prereqcheck
+$ composer require bylexus/php-prereqcheck
 ```
 
 Installation without composer
