@@ -53,6 +53,18 @@ class PhpIniPrereqCheckTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("Ini Size '32M' does not match the criteria '< 32m'",$dc->getResult()->message);
 	}
 
+	public function testCheckNumberUnlimited() {
+		ini_set('memory_limit', '-1');
+		$dc = new \Prereq\PhpIniPrereqCheck();
+		$dc->check('memory_limit','>=16M','number');
+		$this->assertTrue($dc->getResult()->success(),'>= compare for unlimited number failed');
+
+		$dc = new \Prereq\PhpIniPrereqCheck();
+		$dc->check('memory_limit','<64m','number');
+		$this->assertTrue($dc->getResult()->failed());
+		$this->assertEquals("Ini Size '-1' does not match the criteria '< 64m'",$dc->getResult()->message);
+	}
+
 	public function testCheckBoolean() {
 		ini_set('display_errors', 'On');
 		$dc = new \Prereq\PhpIniPrereqCheck();

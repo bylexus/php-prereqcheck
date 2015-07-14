@@ -87,7 +87,12 @@ class PhpIniPrereqCheck extends PrereqCheck {
         if ($matches[1]) $operator = $matches[1];
 
         $number = $matches[2].$matches[3];
-        $iniBytes = $this->sizeStrToBytes($iniValue);
+        if ($iniValue < 0) {
+            $iniBytes = PHP_INT_MAX;
+        } else {
+            $iniBytes = $this->sizeStrToBytes($iniValue);    
+        }
+        
         $numberBytes = $this->sizeStrToBytes($number);
         $passed = false;
         switch ($operator) {
