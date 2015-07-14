@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/bylexus/php-prereqcheck.svg)](https://travis-ci.org/bylexus/php-prereqcheck)
+
 php-prereqcheck
 ===============
 
@@ -228,5 +230,6 @@ Version History
 * 0.1.1 First release
 * 0.2.0 Introduced Namespace `Prereq`, and make use of the Composer autoload facility.
         NOTE: This version is NO LONGER compatible with 0.1.1!
-
+* 0.2.1 Fixes PHP ini number comparisons: -1 now counts as "unlimited" or max integer
+        (e.g. to support `memory_limit = -1`)
 
